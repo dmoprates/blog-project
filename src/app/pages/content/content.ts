@@ -1,5 +1,6 @@
+import { dataFake } from './../../data/dataFake';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-content',
@@ -9,13 +10,28 @@ import { RouterLink } from "@angular/router";
 })
 export class Content implements OnInit{
 
-  photoCover:string = "https://s2.glbimg.com/G2SdEgmv80StKpqKXR5cN6IU62g=/smart/e.glbimg.com/og/ed/f/original/2020/03/09/viuva-negra-scarlett-johansson.jpg"
-  contentTitle:string = "VIÚVA NEGRA"
-  contentDescription:string = "Ullamco ex fugiat labore nisi sunt amet non pariatur ad magna veniam laborum deserunt. Laborum eu enim sit dolore consequat occaecat aute velit quis sit do sunt reprehenderit. Anim consectetur duis ullamco officia consectetur."
-
-  constructor() {}
+  photoCover:string = ""
+  contentTitle:string = ""
+  contentDescription:string = ""
+  private id:string | null ="0"
+  constructor(
+    private route:ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.route.paramMap.subscribe( value =>
+      this.id = value.get("id")
+    )
+    this.setValuesToComponent(this.id)
   }
+
+  setValuesToComponent(id:string | null){
+    const result = dataFake.filter(article => article.id == id )[0]
+    //if(!result) {
+      this.contentTitle = result.title
+      this.contentDescription = result.description
+      this.photoCover = result.photo
+    //}
+  }
+
 }
